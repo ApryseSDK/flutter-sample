@@ -4,7 +4,7 @@ Flutter sample project that integrates a document viewer using [PDFTron Flutter]
 ## Preparation
 
 ### Android
-Add your [PDFTron credentials](https://www.pdftron.com/documentation/android/guides/getting-started/integrate-gradle?showkey=true) to the `android/gradle.properties` file:
+Add your [PDFTron credentials](https://www.pdftron.com/documentation/android/guides/getting-started/integrate-gradle) to the `android/gradle.properties` file:
 ```
 AWS_ACCESS_KEY=YOUR_ACCESS_KEY_GOES_HERE
 AWS_SECRET_KEY=YOUR_SECRET_KEY_GOES_HERE
