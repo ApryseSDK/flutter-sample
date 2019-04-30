@@ -18,7 +18,7 @@ dependencies:
   pdftron_flutter:
     git:
       url: git://github.com/PDFTron/pdftron-flutter.git
-  permission: 0.1.0
+  permission_handler: '3.0.1'
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
