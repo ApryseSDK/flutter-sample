@@ -1,20 +1,6 @@
 # PDFTron Flutter Sample
 Flutter sample project that integrates a document viewer using [PDFTron Flutter](https://github.com/PDFTron/pdftron-flutter). Check out the [integration guides](https://www.pdftron.com/documentation/android/guides/flutter) to learn how to add PDFTron to your Flutter App.
 
-## Preparation
-
-### iOS
-Add your [pod link](https://www.pdftron.com/documentation/ios/guides/getting-started/integrate-cocoapods) to the `ios/Podfile`:
-```
-target 'Runner' do
-  # PDFTron Pods
-  use_frameworks!
-  pod 'PDFNet', podspec: 'POD_LINK_GOES_HERE'
-end
-```
-
-Your pod link is confidential. Please make sure that they are not publicly available.
-
 ## Run
 
 ```
