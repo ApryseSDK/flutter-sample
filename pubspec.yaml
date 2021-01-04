@@ -57,13 +57,13 @@ flutter:
   #   - images/a_dot_ham.jpeg
   
   assets:
-    - assets/pdftron-about-cover.png
-    - assets/getting-started-cover.png
-    - assets/simple-cover.png
-    - assets/large-cover.png
-    - assets/math-cover.png
-    - assets/japanese-cover.png
-    - assets/form-cover.png
+    - assets/file-covers/pdftron-about-cover.png
+    - assets/file-covers/getting-started-cover.png
+    - assets/file-covers/simple-cover.png
+    - assets/file-covers/large-cover.png
+    - assets/file-covers/math-cover.png
+    - assets/file-covers/japanese-cover.png
+    - assets/file-covers/form-cover.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
