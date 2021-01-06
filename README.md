@@ -7,6 +7,20 @@ Flutter sample project that integrates a document viewer using [PDFTron Flutter]
 :--:|:--:
 <img alt='demo-android' src='assets/gifs/android.gif' height="600" /> | <img alt='demo-android' src='assets/gifs/ios.gif' height="600" />
 
+## Step
+
+1. Create a `local.properties` file inside the android folder with your Android SDK location, for example:
+
+```
+sdk.dir=/Users/<user-name>/Library/Android/sdk
+```
+
+2. For iOS, run:
+```
+cd ios
+pod install
+```
+
 ## Run
 
 ```
