@@ -1,0 +1,40 @@
+PODS:
+  - Flutter (1.0.0)
+  - integration_test (0.0.1):
+    - Flutter
+  - PDFNet (8.1.0.76833)
+  - pdftron_flutter (0.0.1):
+    - Flutter
+    - PDFNet
+  - permission_handler (3.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - integration_test (from `.symlinks/plugins/integration_test/ios`)
+  - PDFNet (from `https://www.pdftron.com/downloads/ios/cocoapods/pdfnet/latest.podspec`)
+  - pdftron_flutter (from `.symlinks/plugins/pdftron_flutter/ios`)
+  - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  integration_test:
+    :path: ".symlinks/plugins/integration_test/ios"
+  PDFNet:
+    :podspec: https://www.pdftron.com/downloads/ios/cocoapods/pdfnet/latest.podspec
+  pdftron_flutter:
+    :path: ".symlinks/plugins/pdftron_flutter/ios"
+  permission_handler:
+    :path: ".symlinks/plugins/permission_handler/ios"
+
+SPEC CHECKSUMS:
+  Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
+  integration_test: 6eb66a19f7104200dcfdd62bc0077e1b09686e4f
+  PDFNet: 248e57518524fdbb47970216c2db3522e4f51028
+  pdftron_flutter: 32bd96e9bc9254c1861f17725e40dd611a7056cd
+  permission_handler: 6e56ded745f5a0b9dcc0327c65c4acd6a33b776b
+
+PODFILE CHECKSUM: c3dd2ce4973c59b1eed0b8fefd9e24700fcd3376
+
+COCOAPODS: 1.9.3
