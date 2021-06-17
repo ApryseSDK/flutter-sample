@@ -8,7 +8,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:flutter_sample/thumbnail.dart';
 
 import 'package:flutter_sample/main.dart' as app;
 
@@ -19,7 +18,7 @@ void main() {
     Widget myApp = app.MyApp();
     await tester.pumpWidget(myApp);
 
-    expect(find.text('PDFTron Flutter Sample'), findsOneWidget);    
+    expect(find.text('PDFTron Flutter Sample'), findsOneWidget);
 
     final materialAppFinder = find.descendant(of: find.byWidget(myApp), matching: find.byType(MaterialApp)).first;
     expect(materialAppFinder, findsOneWidget);
@@ -51,8 +50,15 @@ void main() {
       final orientationBuilderFinder = find.descendant(of: bodyFinder, matching: find.byType(OrientationBuilder)).first;
       expect(orientationBuilderFinder, findsOneWidget);
 
-      //final orientationBuilderFinder = find.descendant(of: bodyFinder, matching: find.byType(OrientationBuilder)).first;
-      //expect(orientationBuilderFinder, findsOneWidget);
+      // Check if orientationBuilder returns GridView
+      final inkWellBuilder = find.descendant(of: orientationBuilderFinder, matching: find.byType(InkWell)).first;
+      expect(inkWellBuilder, findsOneWidget);
+
+      final containerBuilder = find.descendant(of: inkWellBuilder, matching: find.byType(Container)).first;
+      expect(containerBuilder, findsOneWidget);
+
+      final imageBuilder = find.descendant(of: containerBuilder, matching: find.byType(Image)).first;
+      expect(imageBuilder, findsOneWidget);
 
     } else if (bodyFinder.first is Container) {
       final alignFinder = find.descendant(of: bodyFinder, matching: find.byType(Align)).first;
@@ -61,6 +67,8 @@ void main() {
       final alignTextFinder = find.descendant(of: alignFinder, matching: find.byType(Text)).first;
       expect(alignTextFinder, findsOneWidget);
     }
+
+    debugPrint("Test completing: Finds child instances of Flutter Sample app");
   });
 
   testWidgets('Finds child instances when state not initialized or permission denied', (WidgetTester tester) async {
@@ -71,6 +79,8 @@ void main() {
     const alignWidget = Align(alignment: Alignment.center, child: textWidget);
     await tester.pumpWidget(Container(child: alignWidget));
     expect(find.byWidget(alignWidget), findsOneWidget);
+
+    debugPrint("Test completing: Finds child instances when state not initialized or permission denied");
   });
   
 }
