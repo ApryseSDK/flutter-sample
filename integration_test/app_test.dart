@@ -14,7 +14,8 @@ import 'package:flutter_sample/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Finds child instances of Flutter Sample app', (WidgetTester tester) async {
+  testWidgets('Find child instances in app widget hierarchy', (WidgetTester tester) async {
+    debugPrint("  RUNNING TEST: 'Find child instances in app widget hierarchy'");
     Widget myApp = app.MyApp();
     await tester.pumpWidget(myApp);
 
@@ -32,25 +33,15 @@ void main() {
     final textFinder = find.descendant(of: appBarFinder, matching: find.byType(Text)).first;
     expect(textFinder, findsOneWidget);
     
-    var bodyFinder;
-    try {
-      bodyFinder = find.descendant(of: scaffoldFinder, matching: find.byType(SafeArea)).first;
-      expect(bodyFinder, findsOneWidget);
-    } catch (e) {
-      bodyFinder = find.descendant(of: scaffoldFinder, matching: find.byType(Container)).first;
-    }
-    expect(bodyFinder, findsOneWidget);
+    var bodyFinder = find.descendant(of: scaffoldFinder, matching: find.byType(SafeArea)).first;
     
-    if (bodyFinder.first is SafeArea) {
-      debugPrint(bodyFinder.evaluate().toString());
-
+    if (bodyFinder.evaluate().isNotEmpty) {
       final outContainerFinder = find.descendant(of: bodyFinder, matching: find.byType(Container)).first;
       expect(outContainerFinder, findsOneWidget);
 
       final orientationBuilderFinder = find.descendant(of: bodyFinder, matching: find.byType(OrientationBuilder)).first;
       expect(orientationBuilderFinder, findsOneWidget);
 
-      // Check if orientationBuilder returns GridView
       final inkWellBuilder = find.descendant(of: orientationBuilderFinder, matching: find.byType(InkWell)).first;
       expect(inkWellBuilder, findsOneWidget);
 
@@ -60,7 +51,10 @@ void main() {
       final imageBuilder = find.descendant(of: containerBuilder, matching: find.byType(Image)).first;
       expect(imageBuilder, findsOneWidget);
 
-    } else if (bodyFinder.first is Container) {
+    } else {
+      bodyFinder = find.descendant(of: scaffoldFinder, matching: find.byType(Container)).first;
+      expect(bodyFinder, findsOneWidget);
+      
       final alignFinder = find.descendant(of: bodyFinder, matching: find.byType(Align)).first;
       expect(alignFinder, findsOneWidget);
 
@@ -68,10 +62,11 @@ void main() {
       expect(alignTextFinder, findsOneWidget);
     }
 
-    debugPrint("Test completing: Finds child instances of Flutter Sample app");
+    debugPrint("  DONE TEST");
   });
 
   testWidgets('Finds child instances when state not initialized or permission denied', (WidgetTester tester) async {
+    debugPrint("  RUNNING TEST: 'Finds child instances when state not initialized or permission denied'");
     const textWidget = Text('Storage permission required.', textDirection: TextDirection.ltr);
     await tester.pumpWidget(Align(alignment: Alignment.center, child: textWidget));
     expect(find.byWidget(textWidget), findsOneWidget);
@@ -80,7 +75,7 @@ void main() {
     await tester.pumpWidget(Container(child: alignWidget));
     expect(find.byWidget(alignWidget), findsOneWidget);
 
-    debugPrint("Test completing: Finds child instances when state not initialized or permission denied");
+    debugPrint("  DONE TEST: Finds child instances when state not initialized or permission denied");
   });
   
 }
