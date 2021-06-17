@@ -14,8 +14,7 @@ import 'package:flutter_sample/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Find child instances in app widget hierarchy', (WidgetTester tester) async {
-    debugPrint("  RUNNING TEST: 'Find child instances in app widget hierarchy'");
+  testWidgets('Find instances in app widget hierarchy', (WidgetTester tester) async {
     Widget myApp = app.MyApp();
     await tester.pumpWidget(myApp);
 
@@ -65,12 +64,9 @@ void main() {
       final alignTextFinder = find.descendant(of: alignFinder, matching: find.byType(Text)).first;
       expect(alignTextFinder, findsOneWidget);
     }
-
-    debugPrint("  DONE TEST");
   });
 
   testWidgets('Finds child instances when state not initialized or permission denied', (WidgetTester tester) async {
-    debugPrint("  RUNNING TEST: 'Finds child instances when state not initialized or permission denied'");
     const textWidget = Text('Storage permission required.', textDirection: TextDirection.ltr);
     await tester.pumpWidget(Align(alignment: Alignment.center, child: textWidget));
     expect(find.byWidget(textWidget), findsOneWidget);
@@ -78,8 +74,6 @@ void main() {
     const alignWidget = Align(alignment: Alignment.center, child: textWidget);
     await tester.pumpWidget(Container(child: alignWidget));
     expect(find.byWidget(alignWidget), findsOneWidget);
-
-    debugPrint("  DONE TEST: Finds child instances when state not initialized or permission denied");
   });
   
 }
