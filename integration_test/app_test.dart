@@ -11,26 +11,43 @@ import 'package:integration_test/integration_test.dart';
 
 import 'package:flutter_sample/main.dart' as app;
 
-void main() => run(_testMain);
+void main() {
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-void _testMain() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    app.main();
+  testWidgets('Finds child instances of Flutter Sample app', (WidgetTester tester) async {
+    Widget myApp = app.MyApp();
+    await tester.pumpWidget(myApp);
 
-    // Trigger a frame.
-    await tester.pumpAndSettle();
+    //expect(find.text('Storage permission required.'), findsOneWidget);
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    final materialAppFinder = find.descendant(of: find.byWidget(myApp), matching: find.byType(MaterialApp));
+    expect(materialAppFinder, findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    final scaffoldFinder = find.descendant(of: materialAppFinder, matching: find.byType(Scaffold));
+    expect(scaffoldFinder, findsOneWidget);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    final appBarFinder = find.descendant(of: scaffoldFinder, matching: find.byType(AppBar));
+    expect(appBarFinder, findsOneWidget);
+
+    final textFinder = find.descendant(of: appBarFinder, matching: find.byType(Text));
+    expect(textFinder, findsOneWidget);
   });
+  /*
+  testWidgets('Finds child instances when state initialized and permission granted', (WidgetTester tester) async {
+  });
+
+  testWidgets('Finds child instances when state not initialized or permission denied', (WidgetTester tester) async {
+    const textWidget = Text('Storage permission required.');
+    // Provide the textWidget to Align.
+    await tester.pumpWidget(Align(alignment: Alignment.center, child: textWidget));
+    // Search for the textWidget in the tree and verify it exists.
+    expect(find.byWidget(textWidget), findsOneWidget);
+
+    const alignWidget = Align(alignment: Alignment.center, child: Text('Storage permission required.'));
+    // Provide the alignWidget to the Container.
+    await tester.pumpWidget(Container(child: alignWidget));
+    // Search for the alignWidget in the tree and verify it exists.
+    expect(find.byWidget(alignWidget), findsOneWidget);
+  });
+  */
 }

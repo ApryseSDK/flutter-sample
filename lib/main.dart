@@ -53,9 +53,9 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> askForPermission() async {
-    Map<PermissionGroup, PermissionStatus> permissions =
-        await PermissionHandler().requestPermissions([PermissionGroup.storage]);
-    if (granted(permissions[PermissionGroup.storage]) && mounted) {
+    var permission =
+        await Permission.storage.request();
+    if (permission.isGranted && mounted) {
       setState(() {
         _storagePermitted = true;
       });
