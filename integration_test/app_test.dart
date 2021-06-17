@@ -35,6 +35,8 @@ void main() {
     
     var bodyFinder = find.descendant(of: scaffoldFinder, matching: find.byType(SafeArea)).first;
     
+    // Body widget is SafeArea type.
+    // Occurs when app is initialized and storage is permitted.
     if (bodyFinder.evaluate().isNotEmpty) {
       final outContainerFinder = find.descendant(of: bodyFinder, matching: find.byType(Container)).first;
       expect(outContainerFinder, findsOneWidget);
@@ -42,16 +44,18 @@ void main() {
       final orientationBuilderFinder = find.descendant(of: bodyFinder, matching: find.byType(OrientationBuilder)).first;
       expect(orientationBuilderFinder, findsOneWidget);
 
-      final inkWellBuilder = find.descendant(of: orientationBuilderFinder, matching: find.byType(InkWell)).first;
-      expect(inkWellBuilder, findsOneWidget);
+      final inkWellFinder = find.descendant(of: orientationBuilderFinder, matching: find.byType(InkWell)).first;
+      expect(inkWellFinder, findsOneWidget);
 
-      final containerBuilder = find.descendant(of: inkWellBuilder, matching: find.byType(Container)).first;
-      expect(containerBuilder, findsOneWidget);
+      final containerFinder = find.descendant(of: inkWellFinder, matching: find.byType(Container)).first;
+      expect(containerFinder, findsOneWidget);
 
-      final imageBuilder = find.descendant(of: containerBuilder, matching: find.byType(Image)).first;
-      expect(imageBuilder, findsOneWidget);
+      final imageFinder = find.descendant(of: containerFinder, matching: find.byType(Image)).first;
+      expect(imageFinder, findsOneWidget);
 
     } else {
+      // Body widget is Container type.
+      // Occurs when app is not initialized or storage is not permitted.
       bodyFinder = find.descendant(of: scaffoldFinder, matching: find.byType(Container)).first;
       expect(bodyFinder, findsOneWidget);
       
