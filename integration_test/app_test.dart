@@ -21,52 +21,47 @@ void main() {
 
     expect(find.text('PDFTron Flutter Sample'), findsOneWidget);    
 
-    final materialAppFinder = find.descendant(of: find.byWidget(myApp), matching: find.byType(MaterialApp));
+    final materialAppFinder = find.descendant(of: find.byWidget(myApp), matching: find.byType(MaterialApp)).first;
     expect(materialAppFinder, findsOneWidget);
 
-    final scaffoldFinder = find.descendant(of: materialAppFinder, matching: find.byType(Scaffold));
+    final scaffoldFinder = find.descendant(of: materialAppFinder, matching: find.byType(Scaffold)).first;
     expect(scaffoldFinder, findsOneWidget);
 
-    final appBarFinder = find.descendant(of: scaffoldFinder, matching: find.byType(AppBar));
+    final appBarFinder = find.descendant(of: scaffoldFinder, matching: find.byType(AppBar)).first;
     expect(appBarFinder, findsOneWidget);
 
-    final textFinder = find.descendant(of: appBarFinder, matching: find.byType(Text));
+    final textFinder = find.descendant(of: appBarFinder, matching: find.byType(Text)).first;
     expect(textFinder, findsOneWidget);
-  });
-  /*
-  testWidgets('Finds child instances when state initialized and permission granted', (WidgetTester tester) async {
-    var orientationBuilderWidget = OrientationBuilder(builder: (context, orientation) {
-
+    
+    var bodyFinder;
+    try {
+      bodyFinder = find.descendant(of: scaffoldFinder, matching: find.byType(SafeArea)).first;
+      expect(bodyFinder, findsOneWidget);
+    } catch (e) {
+      bodyFinder = find.descendant(of: scaffoldFinder, matching: find.byType(Container)).first;
     }
-    );
-    await tester.pumpWidget(InkWell(child: orientationBuilderWidget));
-    expect(find.byWidget(orientationBuilderWidget), findsOneWidget);
+    expect(bodyFinder, findsOneWidget);
+    
+    if (bodyFinder.first is SafeArea) {
+      debugPrint(bodyFinder.evaluate().toString());
+
+      final outContainerFinder = find.descendant(of: bodyFinder, matching: find.byType(Container)).first;
+      expect(outContainerFinder, findsOneWidget);
+
+      final orientationBuilderFinder = find.descendant(of: bodyFinder, matching: find.byType(OrientationBuilder)).first;
+      expect(orientationBuilderFinder, findsOneWidget);
+
+      //final orientationBuilderFinder = find.descendant(of: bodyFinder, matching: find.byType(OrientationBuilder)).first;
+      //expect(orientationBuilderFinder, findsOneWidget);
+
+    } else if (bodyFinder.first is Container) {
+      final alignFinder = find.descendant(of: bodyFinder, matching: find.byType(Align)).first;
+      expect(alignFinder, findsOneWidget);
+
+      final alignTextFinder = find.descendant(of: alignFinder, matching: find.byType(Text)).first;
+      expect(alignTextFinder, findsOneWidget);
+    }
   });
-  
-  testWidgets('Finds child container instance of InkWell', (WidgetTester tester) async {
-    // underscored fields/classes/methods are only available in the .dart file where they are defined
-    int index = 0;
-    Thumbnail thumbnail = thumbnailList[index];
-    var inkWellContainerWidget = Container(
-      margin: EdgeInsets.all(app.MARGIN),
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(thumbnail.assetPath),
-          fit: BoxFit.fitWidth,
-        ),
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            spreadRadius: 1,
-            blurRadius: 3,
-            offset: Offset(2, 2), // changes position of shadow
-          ),
-        ]),
-      );
-      await tester.pumpWidget(InkWell(child: inkWellContainerWidget));
-      expect(find.byWidget(inkWellContainerWidget), findsOneWidget);
-  });*/
 
   testWidgets('Finds child instances when state not initialized or permission denied', (WidgetTester tester) async {
     const textWidget = Text('Storage permission required.', textDirection: TextDirection.ltr);
