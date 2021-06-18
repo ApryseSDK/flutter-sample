@@ -14,12 +14,12 @@ import 'package:flutter_sample/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Check widget hierarchy of app excl. Scaffold body', (WidgetTester tester) async {
+  testWidgets('Check widget hierarchy of app', (WidgetTester tester) async {
     Widget myApp = app.MyApp();
     await tester.pumpWidget(myApp);
 
     final materialAppFinder = find.descendant(of: find.byWidget(myApp), matching: find.byType(MaterialApp));
-    expect(materialAppFinder, findsWidgets);
+    expect(materialAppFinder, findsOneWidget);
 
     final scaffoldFinder = find.byWidgetPredicate((widget) => widget is Scaffold 
       && (widget.body is SafeArea || widget.body is Container));
@@ -33,15 +33,6 @@ void main() {
 
     Text text = tester.firstWidget<Text>(textFinder);
     expect(text.data, 'PDFTron Flutter Sample');
-  });
-
-  testWidgets('Check widget hierarchy of Scaffold body', (WidgetTester tester) async {
-    Widget myApp = app.MyApp();
-    await tester.pumpWidget(myApp);
-
-    final scaffoldFinder = find.byWidgetPredicate((widget) => widget is Scaffold 
-      && (widget.body is SafeArea || widget.body is Container));
-    expect(scaffoldFinder, findsOneWidget);
 
     var scaffold = tester.firstWidget<Scaffold>(scaffoldFinder);
     var body = scaffold.body;
@@ -55,9 +46,9 @@ void main() {
       expect(safeAreaContainerFinder, findsWidgets);
 
       final orientationBuilderFinder = find.descendant(of: safeAreaContainerFinder.first, matching: find.byType(OrientationBuilder));
-      expect(orientationBuilderFinder, findsWidgets);
+      expect(orientationBuilderFinder, findsOneWidget);
 
-      final inkWellFinder = find.descendant(of: orientationBuilderFinder.first, matching: find.byType(InkWell));
+      final inkWellFinder = find.descendant(of: orientationBuilderFinder, matching: find.byType(InkWell));
       expect(inkWellFinder, findsWidgets);
 
       final containerFinder = find.descendant(of: inkWellFinder.first, matching: find.byType(Container));
