@@ -14,7 +14,7 @@ import 'package:flutter_sample/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Find instances in app widget hierarchy', (WidgetTester tester) async {
+  testWidgets('Check widget hierarchy of app excl. body', (WidgetTester tester) async {
     Widget myApp = app.MyApp();
     await tester.pumpWidget(myApp);
 
@@ -31,8 +31,13 @@ void main() {
 
     final textFinder = find.descendant(of: appBarFinder, matching: find.byType(Text)).first;
     expect(textFinder, findsOneWidget);
-    
-    var bodyFinder = find.descendant(of: scaffoldFinder, matching: find.byType(SafeArea)).first;
+  });
+
+  testWidgets('Check widget hierarchy of app body', (WidgetTester tester) async {
+    Widget myApp = app.MyApp();
+    await tester.pumpWidget(myApp);
+
+    var bodyFinder = find.descendant(of: find.byWidget(myApp), matching: find.byType(SafeArea)).first;
     
     // Body widget is SafeArea type.
     // Occurs when app is initialized and storage is permitted.
@@ -55,7 +60,7 @@ void main() {
     } else {
       // Body widget is Container type.
       // Occurs when app is not initialized or storage is not permitted.
-      bodyFinder = find.descendant(of: scaffoldFinder, matching: find.byType(Container)).first;
+      bodyFinder = find.descendant(of: find.byWidget(myApp), matching: find.byType(Container)).first;
       expect(bodyFinder, findsOneWidget);
       
       final alignFinder = find.descendant(of: bodyFinder, matching: find.byType(Align)).first;
@@ -64,16 +69,5 @@ void main() {
       final alignTextFinder = find.descendant(of: alignFinder, matching: find.byType(Text)).first;
       expect(alignTextFinder, findsOneWidget);
     }
-  });
-
-  testWidgets('Finds child instances when state not initialized or permission denied', (WidgetTester tester) async {
-    const textWidget = Text('Storage permission required.', textDirection: TextDirection.ltr);
-    await tester.pumpWidget(Align(alignment: Alignment.center, child: textWidget));
-    expect(find.byWidget(textWidget), findsOneWidget);
-
-    const alignWidget = Align(alignment: Alignment.center, child: textWidget);
-    await tester.pumpWidget(Container(child: alignWidget));
-    expect(find.byWidget(alignWidget), findsOneWidget);
-  });
-  
+  });  
 }
