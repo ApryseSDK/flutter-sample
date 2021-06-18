@@ -74,7 +74,7 @@ class _MyAppState extends State<MyApp> {
 
   Widget getBody() {
     if (_initialized && _storagePermitted) {
-      return SafeArea(child: Container(
+      return SafeArea(key: Key('body'), child: Container(
         child: OrientationBuilder(builder: (context, orientation) {
           return GridView.builder(
             itemCount: thumbnailList.length,
@@ -116,6 +116,7 @@ class _MyAppState extends State<MyApp> {
       ));
     } else {
       return Container(
+          key: Key('body'), 
           child: Align(
         alignment: Alignment
             .center, // Align however you like (i.e .centerRight, centerLeft)

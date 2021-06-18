@@ -18,43 +18,19 @@ void main() {
     Widget myApp = app.MyApp();
     await tester.pumpWidget(myApp);
 
-    final materialAppFinder = find.descendant(of: find.byWidget(myApp), matching: find.byType(MaterialApp));
-    expect(materialAppFinder, findsOneWidget);
-
-    final scaffoldFinder = find.byWidgetPredicate((widget) => widget is Scaffold 
-      && (widget.body is SafeArea || widget.body is Container));
-    expect(scaffoldFinder, findsOneWidget);
-
-    final appBarFinder = find.byWidget(tester.firstWidget<Scaffold>(scaffoldFinder).appBar!);
-    expect(appBarFinder, findsOneWidget);
-
-    final textFinder = find.byWidget(tester.firstWidget<AppBar>(appBarFinder).title!);
-    expect(textFinder, findsOneWidget);
-
-    Text text = tester.firstWidget<Text>(textFinder);
-    expect(text.data, 'PDFTron Flutter Sample');
-
-    var scaffold = tester.firstWidget<Scaffold>(scaffoldFinder);
-    var body = scaffold.body;
-
-    var bodyFinder = find.byWidget(scaffold.body!);
+    final titleFinder = find.text('PDFTron Flutter Sample');
+    expect(titleFinder, findsOneWidget);
+    
+    var bodyFinder = find.byKey(Key('body'));
     expect(bodyFinder, findsOneWidget);
+    var body = tester.firstWidget(bodyFinder);
     
     // Body widget is SafeArea type if app is initialized and storage is permitted.
     if (body is SafeArea) {
-      final safeAreaContainerFinder = find.descendant(of: bodyFinder, matching: find.byType(Container));
-      expect(safeAreaContainerFinder, findsWidgets);
-
-      final orientationBuilderFinder = find.descendant(of: safeAreaContainerFinder.first, matching: find.byType(OrientationBuilder));
-      expect(orientationBuilderFinder, findsOneWidget);
-
-      final inkWellFinder = find.descendant(of: orientationBuilderFinder, matching: find.byType(InkWell));
+      final inkWellFinder = find.descendant(of: bodyFinder, matching: find.byType(InkWell));
       expect(inkWellFinder, findsWidgets);
 
-      final containerFinder = find.descendant(of: inkWellFinder.first, matching: find.byType(Container));
-      expect(containerFinder, findsOneWidget);
-
-      final imageFinder = find.descendant(of: containerFinder.first, matching: find.byType(Image));
+      final imageFinder = find.descendant(of: inkWellFinder.first, matching: find.byType(Image));
       expect(imageFinder, findsOneWidget);
 
     } else {
@@ -64,8 +40,11 @@ void main() {
       final alignFinder = find.descendant(of: bodyFinder, matching: find.byType(Align));
       expect(alignFinder, findsOneWidget);
 
-      final alignTextFinder = find.descendant(of: alignFinder, matching: find.byType(Text));
-      expect(alignTextFinder, findsOneWidget);
+      final textFinder = find.descendant(of: alignFinder, matching: find.byType(Text));
+      expect(textFinder, findsOneWidget);
+
+      Text text = tester.firstWidget<Text>(textFinder);
+      assert(text.data == 'Storage permission required.' || text.data == 'PDFTron SDK not initialized.');
     }
   });  
 }
