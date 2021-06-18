@@ -14,59 +14,66 @@ import 'package:flutter_sample/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Check widget hierarchy of app excl. body', (WidgetTester tester) async {
+  testWidgets('Check widget hierarchy of app excl. Scaffold body', (WidgetTester tester) async {
     Widget myApp = app.MyApp();
     await tester.pumpWidget(myApp);
 
-    expect(find.text('PDFTron Flutter Sample'), findsOneWidget);
+    final materialAppFinder = find.descendant(of: find.byWidget(myApp), matching: find.byType(MaterialApp));
+    expect(materialAppFinder, findsWidgets);
 
-    final materialAppFinder = find.descendant(of: find.byWidget(myApp), matching: find.byType(MaterialApp)).first;
-    expect(materialAppFinder, findsOneWidget);
-
-    final scaffoldFinder = find.descendant(of: materialAppFinder, matching: find.byType(Scaffold)).first;
+    final scaffoldFinder = find.byWidgetPredicate((widget) => widget is Scaffold 
+      && (widget.body is SafeArea || widget.body is Container));
     expect(scaffoldFinder, findsOneWidget);
 
-    final appBarFinder = find.descendant(of: scaffoldFinder, matching: find.byType(AppBar)).first;
+    final appBarFinder = find.byWidget(tester.firstWidget<Scaffold>(scaffoldFinder).appBar!);
     expect(appBarFinder, findsOneWidget);
 
-    final textFinder = find.descendant(of: appBarFinder, matching: find.byType(Text)).first;
+    final textFinder = find.byWidget(tester.firstWidget<AppBar>(appBarFinder).title!);
     expect(textFinder, findsOneWidget);
+
+    Text text = tester.firstWidget<Text>(textFinder);
+    expect(text.data, 'PDFTron Flutter Sample');
   });
 
-  testWidgets('Check widget hierarchy of app body', (WidgetTester tester) async {
+  testWidgets('Check widget hierarchy of Scaffold body', (WidgetTester tester) async {
     Widget myApp = app.MyApp();
     await tester.pumpWidget(myApp);
 
-    var bodyFinder = find.descendant(of: find.byWidget(myApp), matching: find.byType(SafeArea)).first;
+    final scaffoldFinder = find.byWidgetPredicate((widget) => widget is Scaffold 
+      && (widget.body is SafeArea || widget.body is Container));
+    expect(scaffoldFinder, findsOneWidget);
+
+    var scaffold = tester.firstWidget<Scaffold>(scaffoldFinder);
+    var body = scaffold.body;
+
+    var bodyFinder = find.byWidget(scaffold.body!);
+    expect(bodyFinder, findsOneWidget);
     
-    // Body widget is SafeArea type.
-    // Occurs when app is initialized and storage is permitted.
-    if (bodyFinder.evaluate().isNotEmpty) {
-      final outContainerFinder = find.descendant(of: bodyFinder, matching: find.byType(Container)).first;
-      expect(outContainerFinder, findsOneWidget);
+    // Body widget is SafeArea type if app is initialized and storage is permitted.
+    if (body is SafeArea) {
+      final safeAreaContainerFinder = find.descendant(of: bodyFinder, matching: find.byType(Container));
+      expect(safeAreaContainerFinder, findsWidgets);
 
-      final orientationBuilderFinder = find.descendant(of: bodyFinder, matching: find.byType(OrientationBuilder)).first;
-      expect(orientationBuilderFinder, findsOneWidget);
+      final orientationBuilderFinder = find.descendant(of: safeAreaContainerFinder.first, matching: find.byType(OrientationBuilder));
+      expect(orientationBuilderFinder, findsWidgets);
 
-      final inkWellFinder = find.descendant(of: orientationBuilderFinder, matching: find.byType(InkWell)).first;
-      expect(inkWellFinder, findsOneWidget);
+      final inkWellFinder = find.descendant(of: orientationBuilderFinder.first, matching: find.byType(InkWell));
+      expect(inkWellFinder, findsWidgets);
 
-      final containerFinder = find.descendant(of: inkWellFinder, matching: find.byType(Container)).first;
+      final containerFinder = find.descendant(of: inkWellFinder.first, matching: find.byType(Container));
       expect(containerFinder, findsOneWidget);
 
-      final imageFinder = find.descendant(of: containerFinder, matching: find.byType(Image)).first;
+      final imageFinder = find.descendant(of: containerFinder.first, matching: find.byType(Image));
       expect(imageFinder, findsOneWidget);
 
     } else {
-      // Body widget is Container type.
-      // Occurs when app is not initialized or storage is not permitted.
-      bodyFinder = find.descendant(of: find.byWidget(myApp), matching: find.byType(Container)).first;
-      expect(bodyFinder, findsOneWidget);
+      // Body widget is Container type if app is not initialized or storage is not permitted.      
+      expect(body.runtimeType, Container);
       
-      final alignFinder = find.descendant(of: bodyFinder, matching: find.byType(Align)).first;
+      final alignFinder = find.descendant(of: bodyFinder, matching: find.byType(Align));
       expect(alignFinder, findsOneWidget);
 
-      final alignTextFinder = find.descendant(of: alignFinder, matching: find.byType(Text)).first;
+      final alignTextFinder = find.descendant(of: alignFinder, matching: find.byType(Text));
       expect(alignTextFinder, findsOneWidget);
     }
   });  
