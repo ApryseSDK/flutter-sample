@@ -21,11 +21,11 @@ void main() {
     final titleFinder = find.text('PDFTron Flutter Sample');
     expect(titleFinder, findsOneWidget);
     
-    var bodyFinder = find.byKey(Key('body'));
+    final bodyFinder = find.byKey(Key('body'));
     expect(bodyFinder, findsOneWidget);
-    var body = tester.firstWidget(bodyFinder);
     
     // Body widget is SafeArea type if app is initialized and storage is permitted.
+    final body = tester.firstWidget(bodyFinder);
     if (body is SafeArea) {
       final inkWellFinder = find.descendant(of: bodyFinder, matching: find.byType(InkWell));
       expect(inkWellFinder, findsWidgets);
