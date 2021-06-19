@@ -24,9 +24,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  pdftron_flutter:
-    git:
-      url: git://github.com/PDFTron/pdftron-flutter.git
+  pdftron_flutter: '1.0.0-beta.2'
 
   permission_handler: ^8.1.1
 

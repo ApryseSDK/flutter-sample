@@ -7,7 +7,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:flutter_sample/main.dart' as app;
 import 'package:pdftron_flutter/pdftron_flutter.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 // Test for the sample app
 void main() {
@@ -18,8 +17,7 @@ void main() {
     Widget myApp = app.MyApp();
     await tester.pumpWidget(myApp);
 
-    final titleFinder = find.text('PDFTron Flutter Sample');
-    expect(titleFinder, findsOneWidget);
+    expect(find.text("PDFTron Flutter Sample"), findsOneWidget);
     
     final bodyFinder = find.byKey(Key('body'));
     expect(bodyFinder, findsOneWidget);
@@ -45,8 +43,10 @@ void main() {
 
       Text text = tester.firstWidget<Text>(textFinder);
       assert(text.data == 'Storage permission required.' || text.data == 'PDFTron SDK not initialized.');
+
+      expect(find.byType(Text), findsNWidgets(2));
     }
-  });  
+  });
 
   setUpAll(() async {
     // Used to track method calls
@@ -65,23 +65,7 @@ void main() {
     MethodChannel('pdftron_flutter').setMockMethodCallHandler(null);
   });
 
-  testWidgets("Loading App", (WidgetTester tester) async {
-    await tester.runAsync(() async {
-      // Loads sample app
-      await tester.pumpWidget(app.MyApp());
-
-      // Tests to ensure the proper UI loads when the PDFTron SDK has not been initialised
-      expect(find.byType(Text), findsNWidgets(2));
-      expect(find.text("PDFTron Flutter Sample"), findsOneWidget);
-
-      // Rebuilds widget
-      await tester.pump();
-      
-      // Tests to ensure the proper UI loads once the PDFTron SDK has been initialised
-      expect(find.byType(InkWell), findsWidgets);
-    });
-  }, variant: TargetPlatformVariant({TargetPlatform.android, TargetPlatform.iOS}));
-
+  // Incomplete; can't yet control if app is initialized and permission given
   testWidgets("Opening Thumbnail", (WidgetTester tester) async {
     await tester.runAsync(() async {
       await tester.pumpWidget(app.MyApp());
