@@ -15,8 +15,8 @@ const MARGIN = 5.0;
 const PORTRAIT_NUM_COLUMNS = 2;
 const LANDSCAPE_NUM_COLUMNS = 3;
 
-final navigationColor = Platform.isIOS ? Color(0xffffffff) : Color(0xff48a1e0);
-final titleColor = Platform.isIOS ? Color(0xff007aff) : Color(0xffffffff);
+final navigationColor = (BuildContext context) => Theme.of(context).platform == TargetPlatform.iOS ? Color(0xffffffff) : Color(0xff48a1e0);
+final titleColor =  (BuildContext context) => Theme.of(context).platform == TargetPlatform.iOS ? Color(0xff007aff) : Color(0xffffffff);
 
 class MyApp extends StatefulWidget {
   @override
@@ -24,7 +24,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  bool _storagePermitted = Platform.isIOS;
+  late bool _storagePermitted;
   bool _initialized = false;
 
   @override
@@ -32,7 +32,11 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     initPlatformState();
 
-    if (Platform.isAndroid) {
+    setState(() {
+          _storagePermitted = Theme.of(context).platform == TargetPlatform.iOS;
+    });
+
+    if (Theme.of(context).platform == TargetPlatform.android) {
       askForPermission();
     }
   }
@@ -62,11 +66,7 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  bool granted(PermissionStatus status) {
-    return status == PermissionStatus.granted;
-  }
-
-  void openDocument(String document) {
+  void openDocument(String document) async {
     // configure the viewer by setting the config fields
     Config config = new Config();
     PdftronFlutter.openDocument(document, config: config);
@@ -88,6 +88,7 @@ class _MyAppState extends State<MyApp> {
             itemBuilder: (BuildContext context, int index) {
               Thumbnail thumbnail = thumbnailList[index];
               return InkWell(
+                  key: ValueKey(thumbnail.documentUrl),
                   child: Container(
                     margin: EdgeInsets.all(MARGIN),
                     decoration: BoxDecoration(
@@ -135,9 +136,9 @@ class _MyAppState extends State<MyApp> {
             centerTitle: true,
             title: Text(
               'PDFTron Flutter Sample',
-              style: TextStyle(color: titleColor),
+              style: TextStyle(color: titleColor(context)),
             ),
-            backgroundColor: navigationColor,
+            backgroundColor: navigationColor(context),
           ),
           body: getBody()),
     );
