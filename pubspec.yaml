@@ -18,17 +18,15 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
-  pdftron_flutter:
-    git:
-      url: git://github.com/PDFTron/pdftron-flutter.git
+  pdftron_flutter: '1.0.0-beta.2'
 
-  permission_handler: '3.0.1'
+  permission_handler: '8.0.0+2'
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -36,6 +34,8 @@ dependencies:
 
 dev_dependencies:
   flutter_test:
+    sdk: flutter
+  flutter_driver:
     sdk: flutter
   integration_test:
     sdk: flutter
