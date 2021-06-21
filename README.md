@@ -1,7 +1,7 @@
 # PDFTron Flutter Sample
-Flutter sample project that integrates a document viewer using [PDFTron Flutter](https://github.com/PDFTron/pdftron-flutter). 
+Flutter sample project that integrates a document viewer using PDFTron Flutter.
 
-Check out the [integration guides](https://www.pdftron.com/documentation/guides/flutter) to learn how to add PDFTron to your Flutter App.
+PDFTron's Flutter PDF library now supports sound null safety and is available on [GitHub](https://github.com/PDFTron/pdftron-flutter) and [pub.dev](https://pub.dev/packages/pdftron_flutter). To learn how to add PDFTron to your Flutter App, check out the [integration guides](https://www.pdftron.com/documentation/guides/flutter).  
 
 ## Preview
 
@@ -41,7 +41,7 @@ flutter drive --driver=test_driver/integration_test.dart --target=integration_te
 
 ## Upgrade
 
-For updating flutter projects, please check out [here](https://flutter.dev/docs/development/tools/sdk/upgrading).
+For updating flutter projects, please check out [Upgrading Flutter](https://flutter.dev/docs/development/tools/sdk/upgrading).
 
 ## License
 See [License](./LICENSE)
