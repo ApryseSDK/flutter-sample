@@ -1,5 +1,5 @@
 # PDFTron Flutter Sample
-Flutter sample project that integrates a document viewer using PDFTron Flutter.
+A Flutter sample project that integrates a document viewer using PDFTron Flutter.
 
 PDFTron's Flutter PDF library now supports sound null safety and is available on [GitHub](https://github.com/PDFTron/pdftron-flutter) and [pub.dev](https://pub.dev/packages/pdftron_flutter). To learn how to add PDFTron to your Flutter App, check out the [integration guides](https://www.pdftron.com/documentation/guides/flutter).  
 
