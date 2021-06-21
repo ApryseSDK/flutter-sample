@@ -12,6 +12,23 @@ void main() async {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   List<String> calls = <String>[];
 
+  setUpAll(() async {
+    // Used to track method calls.
+    MethodChannel('pdftron_flutter').setMockMethodCallHandler( (MethodCall call) async {
+      calls.add(call.method);
+    });
+  });
+
+  tearDown(() {
+    // Clears list after each test.
+    calls.clear();
+  });
+
+  // Destroys the method call tracker after all tests have ran.
+  tearDownAll(() async {
+    MethodChannel('pdftron_flutter').setMockMethodCallHandler(null);
+  });
+
   testWidgets('Check widget hierarchy of app', (WidgetTester tester) async {
     Widget myApp = app.MyApp();
     await tester.pumpWidget(myApp);
@@ -45,23 +62,6 @@ void main() async {
 
       expect(find.byType(Text), findsNWidgets(2));
     }
-  });
-
-  setUpAll(() async {
-    // Used to track method calls.
-    MethodChannel('pdftron_flutter').setMockMethodCallHandler( (MethodCall call) async {
-      calls.add(call.method);
-    });
-  });
-
-  tearDown(() {
-    // Clears list after each test.
-    calls.clear();
-  });
-
-  // Destroys the method call tracker after all tests have ran.
-  tearDownAll(() async {
-    MethodChannel('pdftron_flutter').setMockMethodCallHandler(null);
   });
 
   testWidgets("Opening Thumbnail", (WidgetTester tester) async {
