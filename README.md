@@ -27,8 +27,16 @@ pod install
 
 ## Run
 
+### Sample App
+
 ```
 flutter run
+```
+
+### Test
+
+```
+flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart
 ```
 
 ## Upgrade
