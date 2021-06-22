@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sample/thumbnail.dart';
 import 'package:pdftron_flutter/pdftron_flutter.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 void main() => runApp(MyApp());
 
@@ -15,8 +14,8 @@ const MARGIN = 5.0;
 const PORTRAIT_NUM_COLUMNS = 2;
 const LANDSCAPE_NUM_COLUMNS = 3;
 
-final navigationColor = Platform.isIOS ? Color(0xffffffff) : Color(0xff48a1e0);
-final titleColor = Platform.isIOS ? Color(0xff007aff) : Color(0xffffffff);
+final navigationColor = (BuildContext context) => Theme.of(context).platform == TargetPlatform.iOS ? Color(0xffffffff) : Color(0xff48a1e0);
+final titleColor =  (BuildContext context) => Theme.of(context).platform == TargetPlatform.iOS ? Color(0xff007aff) : Color(0xffffffff);
 
 class MyApp extends StatefulWidget {
   @override
@@ -24,17 +23,12 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  bool _storagePermitted = Platform.isIOS;
   bool _initialized = false;
 
   @override
   void initState() {
     super.initState();
     initPlatformState();
-
-    if (Platform.isAndroid) {
-      askForPermission();
-    }
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -52,29 +46,15 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  Future<void> askForPermission() async {
-    Map<PermissionGroup, PermissionStatus> permissions =
-        await PermissionHandler().requestPermissions([PermissionGroup.storage]);
-    if (granted(permissions[PermissionGroup.storage]) && mounted) {
-      setState(() {
-        _storagePermitted = true;
-      });
-    }
-  }
-
-  bool granted(PermissionStatus status) {
-    return status == PermissionStatus.granted;
-  }
-
-  void openDocument(String document) {
+  void openDocument(String document) async {
     // configure the viewer by setting the config fields
     Config config = new Config();
     PdftronFlutter.openDocument(document, config: config);
   }
 
   Widget getBody() {
-    if (_initialized && _storagePermitted) {
-      return SafeArea(child: Container(
+    if (_initialized) {
+      return SafeArea(key: Key('body'), child: Container(
         child: OrientationBuilder(builder: (context, orientation) {
           return GridView.builder(
             itemCount: thumbnailList.length,
@@ -88,6 +68,7 @@ class _MyAppState extends State<MyApp> {
             itemBuilder: (BuildContext context, int index) {
               Thumbnail thumbnail = thumbnailList[index];
               return InkWell(
+                  key: ValueKey(thumbnail.documentUrl),
                   child: Container(
                     margin: EdgeInsets.all(MARGIN),
                     decoration: BoxDecoration(
@@ -116,12 +97,11 @@ class _MyAppState extends State<MyApp> {
       ));
     } else {
       return Container(
+          key: Key('body'), 
           child: Align(
         alignment: Alignment
             .center, // Align however you like (i.e .centerRight, centerLeft)
-        child: Text(_initialized
-            ? 'Storage permission required.'
-            : 'PDFTron SDK not initialized.'),
+        child: Text('PDFTron SDK not initialized.'),
       ));
     }
   }
@@ -134,9 +114,9 @@ class _MyAppState extends State<MyApp> {
             centerTitle: true,
             title: Text(
               'PDFTron Flutter Sample',
-              style: TextStyle(color: titleColor),
+              style: TextStyle(color: titleColor(context)),
             ),
-            backgroundColor: navigationColor,
+            backgroundColor: navigationColor(context),
           ),
           body: getBody()),
     );
