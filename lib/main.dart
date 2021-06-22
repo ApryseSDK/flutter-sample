@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sample/thumbnail.dart';
 import 'package:pdftron_flutter/pdftron_flutter.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 void main() => runApp(MyApp());
 
@@ -24,21 +23,12 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late bool _storagePermitted;
   bool _initialized = false;
 
   @override
   void initState() {
     super.initState();
     initPlatformState();
-
-    setState(() {
-          _storagePermitted = Theme.of(context).platform == TargetPlatform.iOS;
-    });
-
-    if (Theme.of(context).platform == TargetPlatform.android) {
-      askForPermission();
-    }
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -56,16 +46,6 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  Future<void> askForPermission() async {
-    var permission =
-        await Permission.storage.request();
-    if (permission.isGranted && mounted) {
-      setState(() {
-        _storagePermitted = true;
-      });
-    }
-  }
-
   void openDocument(String document) async {
     // configure the viewer by setting the config fields
     Config config = new Config();
@@ -73,7 +53,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Widget getBody() {
-    if (_initialized && _storagePermitted) {
+    if (_initialized) {
       return SafeArea(key: Key('body'), child: Container(
         child: OrientationBuilder(builder: (context, orientation) {
           return GridView.builder(
@@ -121,9 +101,7 @@ class _MyAppState extends State<MyApp> {
           child: Align(
         alignment: Alignment
             .center, // Align however you like (i.e .centerRight, centerLeft)
-        child: Text(_initialized
-            ? 'Storage permission required.'
-            : 'PDFTron SDK not initialized.'),
+        child: Text('PDFTron SDK not initialized.'),
       ));
     }
   }
