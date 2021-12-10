@@ -1,144 +1,117 @@
 import 'dart:async';
-import 'dart:io' show Platform;
-
+import 'dart:io' show Directory, File;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_sample/thumbnail.dart';
 import 'package:pdftron_flutter/pdftron_flutter.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:path_provider/path_provider.dart';
+
+/*
+* Widget version
+* */
 
 void main() => runApp(MyApp());
 
-const ASPECT_RATIO = 1224 / 1584;
-const MARGIN = 5.0;
-
-const PORTRAIT_NUM_COLUMNS = 2;
-const LANDSCAPE_NUM_COLUMNS = 3;
-
-final navigationColor = Platform.isIOS ? Color(0xffffffff) : Color(0xff48a1e0);
-final titleColor = Platform.isIOS ? Color(0xff007aff) : Color(0xffffffff);
-
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   @override
-  _MyAppState createState() => _MyAppState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Viewer(),
+    );
+  }
 }
 
-class _MyAppState extends State<MyApp> {
-  bool _storagePermitted = Platform.isIOS;
-  bool _initialized = false;
+class Viewer extends StatefulWidget {
+  @override
+  _ViewerState createState() => _ViewerState();
+}
+
+class _ViewerState extends State<Viewer> {
+  final ValueNotifier<DocumentViewController> _documentViewController =
+      ValueNotifier<DocumentViewController>(null);
+  Future<Directory> directory;
 
   @override
   void initState() {
     super.initState();
-    initPlatformState();
-
-    if (Platform.isAndroid) {
-      askForPermission();
-    }
+    PdftronFlutter.initialize("your_pdftron_license_key");
+    directory = _getLocalDirectory();
   }
 
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      PdftronFlutter.initialize("your_pdftron_license_key");
-      if (mounted) {
-        setState(() {
-          _initialized = true;
-        });
-      }
-    } on PlatformException {
-      // stub
-    }
-  }
-
-  Future<void> askForPermission() async {
-    Map<PermissionGroup, PermissionStatus> permissions =
-        await PermissionHandler().requestPermissions([PermissionGroup.storage]);
-    if (granted(permissions[PermissionGroup.storage]) && mounted) {
-      setState(() {
-        _storagePermitted = true;
-      });
-    }
-  }
-
-  bool granted(PermissionStatus status) {
-    return status == PermissionStatus.granted;
-  }
-
-  void openDocument(String document) {
-    // configure the viewer by setting the config fields
-    Config config = new Config();
-    PdftronFlutter.openDocument(document, config: config);
-  }
-
-  Widget getBody() {
-    if (_initialized && _storagePermitted) {
-      return SafeArea(child: Container(
-        child: OrientationBuilder(builder: (context, orientation) {
-          return GridView.builder(
-            itemCount: thumbnailList.length,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: orientation == Orientation.portrait
-                    ? PORTRAIT_NUM_COLUMNS
-                    : LANDSCAPE_NUM_COLUMNS,
-                // crossAxisSpacing: SPACING,
-                // mainAxisSpacing: SPACING,
-                childAspectRatio: ASPECT_RATIO),
-            itemBuilder: (BuildContext context, int index) {
-              Thumbnail thumbnail = thumbnailList[index];
-              return InkWell(
-                  child: Container(
-                    margin: EdgeInsets.all(MARGIN),
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(thumbnail.assetPath),
-                        fit: BoxFit.fitWidth,
-                      ),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
-                          spreadRadius: 1,
-                          blurRadius: 3,
-                          offset: Offset(2, 2), // changes position of shadow
-                        ),
-                      ],
-                    ),
-                    child: Image(image: AssetImage(thumbnail.assetPath)),
-                  ),
-                  onTap: () {
-                    openDocument(thumbnail.documentUrl);
-                  });
-            },
-          );
-        }),
-      ));
-    } else {
-      return Container(
-          child: Align(
-        alignment: Alignment
-            .center, // Align however you like (i.e .centerRight, centerLeft)
-        child: Text(_initialized
-            ? 'Storage permission required.'
-            : 'PDFTron SDK not initialized.'),
-      ));
-    }
+  Future<Directory> _getLocalDirectory() async {
+    return await getApplicationDocumentsDirectory();
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-          appBar: AppBar(
-            centerTitle: true,
-            title: Text(
-              'PDFTron Flutter Sample',
-              style: TextStyle(color: titleColor),
-            ),
-            backgroundColor: navigationColor,
-          ),
-          body: getBody()),
+    return FutureBuilder<Directory>(
+        future: directory,
+        builder: (BuildContext context, AsyncSnapshot<Directory> result) {
+          return Scaffold(
+            body: Center(
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildDocumentButton('doc1.pdf'),
+              ],
+            )),
+          );
+        });
+  }
+
+  Widget _buildDocumentButton(String title) {
+    return SizedBox(
+      height: 100,
+      width: 200,
+      child: RaisedButton(
+          color: Colors.green,
+          onPressed: () async {
+            final _pdfDocumentView =
+                PdfDocumentView((DocumentViewController controller) {
+              _documentViewController.value = controller;
+              _onDocumentViewCreated(controller, title);
+            });
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => _pdfDocumentView));
+          },
+          child: Text(title, style: TextStyle(fontSize: 20))),
+    );
+  }
+
+  void _onDocumentViewCreated(
+      DocumentViewController controller, String fileName) async {
+    startLeadingNavButtonPressedListener(() async {
+      Navigator.of(context).pop();
+    });
+
+    var config = Config();
+    config.singleLineToolbar = true;
+    await _documentViewController.value.openDocument(
+        'https://pdftron.s3.amazonaws.com/downloads/pl/PDFTRON_mobile_about.pdf',
+        config: config);
+
+    final annotationsPayload = '''
+    <xfdf xmlns="http://ns.adobe.com/xfdf/" xml:space="preserve">
+               <fields />
+
+               </xfdf>
+    ''';
+
+    _documentViewController.value.importAnnotationCommand(annotationsPayload);
+  }
+}
+
+class PdfDocumentView extends StatelessWidget {
+  const PdfDocumentView(this._onViewCreated);
+  final Function(DocumentViewController contoller) _onViewCreated;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          child: DocumentView(
+            onCreated: _onViewCreated,
+          )),
     );
   }
 }
