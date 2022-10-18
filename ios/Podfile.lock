@@ -2,18 +2,21 @@ PODS:
   - Flutter (1.0.0)
   - integration_test (0.0.1):
     - Flutter
-  - PDFNet (8.1.0.76833)
+  - PDFTron (1.0.0-beta.55)
   - pdftron_flutter (0.0.1):
     - Flutter
-    - PDFNet
+    - PDFTron
+    - PDFTronTools
+  - PDFTronTools (1.0.0-beta.55)
   - permission_handler (3.0.1):
     - Flutter
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - integration_test (from `.symlinks/plugins/integration_test/ios`)
-  - PDFNet (from `https://www.pdftron.com/downloads/ios/cocoapods/pdfnet/latest.podspec`)
+  - PDFTron (from `https://pdftron.com/downloads/ios/flutter/pdftron/latest.podspec`)
   - pdftron_flutter (from `.symlinks/plugins/pdftron_flutter/ios`)
+  - PDFTronTools (from `https://pdftron.com/downloads/ios/flutter/pdftron-tools/latest.podspec`)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
 
 EXTERNAL SOURCES:
@@ -21,20 +24,23 @@ EXTERNAL SOURCES:
     :path: Flutter
   integration_test:
     :path: ".symlinks/plugins/integration_test/ios"
-  PDFNet:
-    :podspec: https://www.pdftron.com/downloads/ios/cocoapods/pdfnet/latest.podspec
+  PDFTron:
+    :podspec: https://pdftron.com/downloads/ios/flutter/pdftron/latest.podspec
   pdftron_flutter:
     :path: ".symlinks/plugins/pdftron_flutter/ios"
+  PDFTronTools:
+    :podspec: https://pdftron.com/downloads/ios/flutter/pdftron-tools/latest.podspec
   permission_handler:
     :path: ".symlinks/plugins/permission_handler/ios"
 
 SPEC CHECKSUMS:
-  Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
-  integration_test: 6eb66a19f7104200dcfdd62bc0077e1b09686e4f
-  PDFNet: 248e57518524fdbb47970216c2db3522e4f51028
-  pdftron_flutter: 32bd96e9bc9254c1861f17725e40dd611a7056cd
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  integration_test: a1e7d09bd98eca2fc37aefd79d4f41ad37bdbbe5
+  PDFTron: b0afc9f45a59620518e4cc34dddc8fc027058f39
+  pdftron_flutter: a42c88fdcb378d1ca78dc9fab6930e81e3e064d4
+  PDFTronTools: 21d681bf8e4a40bd1fb1cf043f68bb8d4b176f1d
   permission_handler: 6e56ded745f5a0b9dcc0327c65c4acd6a33b776b
 
-PODFILE CHECKSUM: c3dd2ce4973c59b1eed0b8fefd9e24700fcd3376
+PODFILE CHECKSUM: 1e93549f647d17ef29a93651b2cbc18ae415ab1e
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.11.3
