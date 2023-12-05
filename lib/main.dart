@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sample/thumbnail.dart';
 import 'package:pdftron_flutter/pdftron_flutter.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 void main() => runApp(MyApp());
 
@@ -24,17 +23,12 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  bool _storagePermitted = Platform.isIOS;
   bool _initialized = false;
 
   @override
   void initState() {
     super.initState();
     initPlatformState();
-
-    if (Platform.isAndroid) {
-      askForPermission();
-    }
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -52,20 +46,6 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  Future<void> askForPermission() async {
-    Map<PermissionGroup, PermissionStatus> permissions =
-        await PermissionHandler().requestPermissions([PermissionGroup.storage]);
-    if (granted(permissions[PermissionGroup.storage]) && mounted) {
-      setState(() {
-        _storagePermitted = true;
-      });
-    }
-  }
-
-  bool granted(PermissionStatus status) {
-    return status == PermissionStatus.granted;
-  }
-
   void openDocument(String document) {
     // configure the viewer by setting the config fields
     Config config = new Config();
@@ -73,7 +53,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Widget getBody() {
-    if (_initialized && _storagePermitted) {
+    if (_initialized) {
       return SafeArea(child: Container(
         child: OrientationBuilder(builder: (context, orientation) {
           return GridView.builder(
@@ -119,9 +99,7 @@ class _MyAppState extends State<MyApp> {
           child: Align(
         alignment: Alignment
             .center, // Align however you like (i.e .centerRight, centerLeft)
-        child: Text(_initialized
-            ? 'Storage permission required.'
-            : 'PDFTron SDK not initialized.'),
+        child: Text('PDFTron SDK not initialized.'),
       ));
     }
   }
