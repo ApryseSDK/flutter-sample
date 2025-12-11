@@ -31,8 +31,8 @@ target 'Runner' do
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
   # PDFTron Pods
   use_frameworks!
-  pod 'PDFTron', podspec: 'https://pdftron.com/downloads/ios/flutter/pdftron/latest.podspec'
-  pod 'PDFTronTools', podspec: 'https://pdftron.com/downloads/ios/flutter/pdftron-tools/latest.podspec'
+  pod 'PDFTron', podspec: 'https://pdftron.com/downloads/ios/cocoapods/xcframeworks/pdftron/latest.podspec'
+  pod 'PDFTronTools', podspec: 'https://pdftron.com/downloads/ios/cocoapods/xcframeworks/pdftron-tools/latest.podspec'
 end
 
 post_install do |installer|
